@@ -27,33 +27,28 @@ The following is a checklist of tasks to complete this project.
 * [x] Set up a virtual environment or `Project.toml` file for Julia dependencies.
 
 ### **Phase 2: Data Acquisition & Processing**
+**generic helper functions**
+
+* [x] Write generic helper functions for downloading data. 
 
 **TARA Oceans Data**
-* [ ] Identify specific Tara Oceans datasets required.
+
+* [ ] Identify which Tara Oceans datasets are required.
 * [ ] Locate and list all direct download URLs for required data.
-* [ ] Write a robust Julia script to download all identified Tara Oceans data.
-* [ ] Develop a Julia script to process and clean the raw Tara data.
+* [ ] Develop a script to process and clean the raw Tara data.
 
 **ISIMIP Model Data**
-* [ ] Identify the most relevant ISIMIP model outputs for comparison.
+
+* [ ] Identify the most relevant ISIMIP model outputs and inputs.
 * [ ] Download the selected ISIMIP climate model outputs.
-* [ ] Develop a Julia script to subset the ISIMIP data to match the Tara Oceans samples.
-* [ ] Reformat the ISIMIP data to be compatible with the Tara Oceans data.
+* [ ] Develop a Julia script map both datasets on a common raster. 
 
 ### **Phase 3: Integration & Analysis**
 
-* [ ] Create a Julia notebook or script (`notebooks/analysis.jl`) to load and merge the processed data.
-* [ ] Develop a statistical methodology to compare the datasets.
-* [ ] Write code to perform the core statistical analysis.
+* [ ] Create script to load and merge the processed data.
+* [ ] Develop ML methodology to predict the datasets.
+* [ ] Develop proper statistics.
 * [ ] Create visualizations to illustrate the proof of principle.
-
-### **Phase 4: Documentation & Finalization**
-
-* [ ] Update the `README.md` with a detailed summary of the methods and initial findings.
-* [ ] Add clear comments and documentation to all scripts and notebooks.
-* [ ] Create a data description file (`data/README.md`).
-* [ ] Clean up the repository and remove any large or unnecessary files.
-* [ ] Create a final commit with a summary of the project's success.
 
 ***
 
