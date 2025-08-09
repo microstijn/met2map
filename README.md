@@ -55,7 +55,7 @@ The following is a checklist of tasks to complete this project.
 ## Data locations
 
 **Metagenomes**
-TARA Ocean metagenomic datasets (ENA accession: ERP009009 https://www.ebi.ac.uk/ena/browser/view/ERP009009) were downloaded by running the repository's provided wget shell script in Git Bash for Windows.
+TARA Ocean metagenomic datasets (ENA accession: ERP009009 https://www.ebi.ac.uk/ena/browser/view/ERP009009) downloaded by running the repository's provided wget shell script in Git Bash for Windows.
 
 ## Getting Started
 
