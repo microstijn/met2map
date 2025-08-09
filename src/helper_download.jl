@@ -1,51 +1,85 @@
-# This script reads a list of URLs from a file and downloads each one.
+# 1. Export 
+export download_data
 
-# 1. Define the path to your URL list file and the output directory.
-script_dir = @__DIR__
-using Pkg
-Pkg.activate(joinpath(script_dir, ".."))
+# 2. Add dependencies
 using Downloads
-url_list_file = joinpath([dirname(@__DIR__), "download_locations","downloads.txt"])
+using URIs
 
-output_dir = "tara_oceans_pangaea"
+# 3. functions
+"""
+    download_data(url::String, output_dir::String; ...)
 
+Downloads a file, automatically detecting the file extension from URL
+parameters like '?format=zip'.
 
-# 2. Create the output directory if it doesn't exist.
-if !isdir(output_dir)
-    mkdir(output_dir)
-    println("Created directory: $output_dir")
-end
+# Arguments
+- `url::String`: The URL of the file to download.
+- `output_dir::String`: The path to an existing base directory for the download.
+- `force_overwrite::Bool`: (Keyword, default: `false`) Controls file overwriting.
+- `create_subfolder::Union{String, Nothing}`: (Keyword, default: `nothing`) If a string is provided,
+  a subfolder with that name will be created inside `output_dir`.
+"""
+function download_data(url::String, output_dir::String; force_overwrite::Bool=false, create_subfolder::Union{String, Nothing}=nothing)
+    # 1. Validate that the main output directory exists.
+    if !isdir(output_dir)
+        println("ERROR: The base output directory '", output_dir, "' does not exist.")
+        return
+    end
 
-# 3. Read the list of URLs from the file.
-println("Reading URLs from $url_list_file...")
-urls = readlines(url_list_file)
+    # 2. Determine the final destination directory.
+    final_destination_dir = output_dir
+    if create_subfolder isa String
+        final_destination_dir = joinpath(output_dir, create_subfolder)
+        if !isdir(final_destination_dir)
+            mkdir(final_destination_dir)
+            println("Created new subfolder: ", final_destination_dir)
+        end
+    end
 
-# 4. Iterate through the URLs and download each file.
-for url in urls
-    # Skip empty lines
     if isempty(url)
-        continue
+        println("Warning: Received an empty URL. Skipping.")
+        return
     end
-    
-    # Extract the filename from the URL, but then clean it.
-    # We will use a more robust way to create a valid filename.
-    filename = "Pangaea_875582_zipfile.zip"
-    output_path = joinpath(output_dir, filename)
 
-    println("Attempting to download: $filename")
+    # AUTOMATIC EXTENSION DETECTION 
+    # Parse the URL into its components (path, query, etc.)
+    uri = URI(url)
+    query_params = queryparams(uri)
     
-    # Check if the file already exists
+    # Get the base filename from the URL's path.
+    base_filename = basename(uri.path)
+    # Safely get the value of the 'format' parameter, defaulting to "" if not found.
+    ext = get(query_params, "format", "")
+    
+    # Combine the base name and extension if an extension was found.
+    filename = isempty(ext) ? base_filename : "$base_filename.$ext"
+    
+
+    output_path = joinpath(final_destination_dir, filename)
+
     if isfile(output_path)
-        println("File '$filename' already exists. Skipping.")
-        continue
+        if force_overwrite
+            println("File exists. Forcing overwrite as requested.")
+        else
+            print("File '", filename, "' already exists in '", final_destination_dir, "'. Overwrite? (yes/no): ")
+            answer = readline()
+            
+            if !(lowercase(strip(answer)) in ("yes", "y"))
+                println("Skipping download.")
+                return 
+            end
+            
+            println("Proceeding with overwrite...")
+        end
     end
 
+    println("Attempting to download '", filename, "' to '", final_destination_dir, "'")
+    
     try
         Downloads.download(url, output_path)
-        println("Successfully downloaded '$filename'.")
+        println("SUCCESS: Downloaded '", filename, "'.")
     catch e
-        println("Failed to download '$filename'. Error: ", e)
+        println("ERROR: Failed to download '", filename, "'. Details: ", e)
     end
 end
 
-println("All downloads processed.")

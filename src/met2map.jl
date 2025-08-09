@@ -1,5 +1,7 @@
 module met2map
 
-greet() = print("Hello World!")
+    include("helper_download.jl")
 
 end # module met2map
+
+
