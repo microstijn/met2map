@@ -52,15 +52,17 @@ The following is a checklist of tasks to complete this project.
 
 ***
 
-# Project Data Acquisition
+### **Project Data Acquisition**
 
-This document outlines the procedures for downloading the project's metadata and the raw metagenomic sequence data from the TARA Ocean project.
+This document outlines the procedures for downloading the project's metadata, raw metagenomic sequence data, and gene catalogs from the TARA Ocean project.
 
-## 1. BioSample Metadata (Project PRJEB7988)
+---
+
+#### **1. BioSample Metadata (Project PRJEB7988)**
 
 To understand the project's scope and sample details, BioSample metadata was first downloaded from the NCBI.
 
-* **Tool Installation**: The **NCBI Datasets** command-line tool was installed via `conda`.
+* **Tool Installation**: The NCBI Datasets command-line tool was installed via conda.
     ```bash
     conda install -c conda-forge ncbi-datasets-cli
     ```
@@ -76,13 +78,36 @@ To understand the project's scope and sample details, BioSample metadata was fir
 
 ---
 
-## 2. Metagenomic Sequence Data (Project ERP009009)
+#### **2. Metagenomic Sequence Data (Project ERP009009)**
 
 The raw metagenomic sequence reads were sourced directly from the European Nucleotide Archive (ENA).
 
 * **Dataset**: TARA Ocean metagenomic datasets, available under ENA study accession **ERP009009**. You can browse the project here: [https://www.ebi.ac.uk/ena/browser/view/ERP009009](https://www.ebi.ac.uk/ena/browser/view/ERP009009)
 * **Download Method**: The data files were downloaded by running the `wget` shell script provided directly by the ENA repository for the project.
-* **Execution Environment**: To ensure compatibility with the Linux-based shell script, **Git Bash for Windows** was used to execute the download commands.
+* **Execution Environment**: To ensure compatibility with the Linux-based shell script, Git Bash for Windows was used to execute the download commands.
+
+---
+
+#### **3. TARA Ocean Gene Catalogs (GEMS)**
+
+The TARA Oceans prokaryotic gene catalogs (GEMS) were downloaded from Zenodo to provide a reference for functional analysis.
+
+* **Datasets**: The specific datasets used are:
+    * TARA Oceans prokaryotic genome and metagenome-assembled genome GEMS: [https://zenodo.org/records/5597227](https://zenodo.org/records/5597227)
+    * TARA Oceans virome GEMS: [https://zenodo.org/records/5599412](https://zenodo.org/records/5599412)
+* **Tool Installation**: The `zenodo-get` command-line tool was installed via pip.
+    ```bash
+    pip install zenodo-get
+    ```
+* **Download Command**: The gene catalogs were downloaded using their Zenodo record identifiers.
+    ```bash
+    # Create a directory for the gene catalogs
+    mkdir -p data/gems
+
+    # Download the TARA Oceans GEMS catalogs
+    zenodo-get 10.5281/zenodo.5597227 -o data/gems/
+    zenodo-get 10.5281/zenodo.5599412 -o data/gems/
+    ```
 
 ## Getting Started
 
