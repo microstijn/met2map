@@ -52,10 +52,37 @@ The following is a checklist of tasks to complete this project.
 
 ***
 
-## Data locations
+# Project Data Acquisition
 
-**Metagenomes**
-TARA Ocean metagenomic datasets (ENA accession: ERP009009 https://www.ebi.ac.uk/ena/browser/view/ERP009009) downloaded by running the repository's provided wget shell script in Git Bash for Windows.
+This document outlines the procedures for downloading the project's metadata and the raw metagenomic sequence data from the TARA Ocean project.
+
+## 1. BioSample Metadata (Project PRJEB7988)
+
+To understand the project's scope and sample details, BioSample metadata was first downloaded from the NCBI.
+
+* **Tool Installation**: The **NCBI Datasets** command-line tool was installed via `conda`.
+    ```bash
+    conda install -c conda-forge ncbi-datasets-cli
+    ```
+* **Download Command**: A complete JSON data report for the project was downloaded using the `datasets summary` command.
+    ```bash
+    # Create a directory for the output
+    mkdir -p data/metadata
+
+    # Download the project metadata summary
+    datasets summary bioproject PRJEB7988 > data/metadata/PRJEB7988_metadata.json
+    ```
+* **Output File**: The command generates a single JSON file (`PRJEB7988_metadata.json`) containing a structured report with rich BioSample metadata (e.g., collection date, host, isolation source) for each sample in the project.
+
+---
+
+## 2. Metagenomic Sequence Data (Project ERP009009)
+
+The raw metagenomic sequence reads were sourced directly from the European Nucleotide Archive (ENA).
+
+* **Dataset**: TARA Ocean metagenomic datasets, available under ENA study accession **ERP009009**. You can browse the project here: [https://www.ebi.ac.uk/ena/browser/view/ERP009009](https://www.ebi.ac.uk/ena/browser/view/ERP009009)
+* **Download Method**: The data files were downloaded by running the `wget` shell script provided directly by the ENA repository for the project.
+* **Execution Environment**: To ensure compatibility with the Linux-based shell script, **Git Bash for Windows** was used to execute the download commands.
 
 ## Getting Started
 
