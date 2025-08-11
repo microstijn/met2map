@@ -43,43 +43,57 @@ graph TD
 
 ### **Phase -1: Repository Setup & Planning**
 
-* [x] Initialize Git repository and create an initial commit.
-* [x] Write a preliminary `README.md` outlining the project's goal and methodology.
-* [x] Write generic helper functions for downloading data.
-* [x] install software (metage2metabo).
+ ✅ Initialize Git repository and create an initial commit.
+ 
+ ✅ Write a preliminary `README.md` outlining the project's goal and methodology.
+ 
+ ✅ Write generic helper functions for downloading data.
+ 
+ ✅ install software (metage2metabo).
 
 ### **Phase 0: Data aquisition**
 **TARA Oceans Data**
 
-* [x] Identify which Tara Oceans datasets are required.
-* [x] Locate and list all direct download URLs for required data.
+✅ Identify which Tara Oceans datasets are required.
+
+✅ Locate and list all direct download URLs for required data.
 
 **ISIMIP Model Data**
 
-* [ ] Identify the most relevant ISIMIP model outputs and inputs.
-* [ ] Download the selected ISIMIP climate model outputs.
-* [ ] Develop a Julia script map both datasets on a common raster.
+⬜️ Identify the most relevant ISIMIP model outputs and inputs.
+
+⬜️ Download the selected ISIMIP climate model outputs.
+
+⬜️ Develop a Julia script map both datasets on a common raster.
 
 **GEMs**
-* [x] Download or create GEMs from TARA data.
+
+✅ Download or create GEMs from TARA data.
 
 ### Phase 1: Functional profiling 
 
-* [ ] Identify metabolites related to water quality (e.g., N2O production, methane oxidation, pollutant degradation) as targets.
-* [ ] Figure out how to use the in-situ TARA environmental measurements as seeds (available nutrients) for the simulation.
-* [ ] Run m2m metacom.
-* [ ] Quantify water quality contribution. 
+⬜️ Identify metabolites related to water quality (e.g., N2O production, methane oxidation, pollutant degradation) as targets.
+
+⬜️ Figure out how to use the in-situ TARA environmental measurements as seeds (available nutrients) for the simulation.
+
+⬜️ Run m2m metacom.
+
+⬜️ Quantify water quality contribution. 
+
 
 ### Phase 2: Machine Learning (Linking Function to Environment)
 
-* [ ] Data prepration
-* [ ] Model testing and choosing the right aproach. 
-* [ ] Model training
+⬜️ Data prepration
+
+⬜️ Model testing and choosing the right aproach. 
+
+⬜️ Model training
       
 ### Phase 3: Machine Learning (Linking Function to Environment)
 
-* [ ] Process the ISIMIP NetCDF files to extract the environmental variables. 
-* [ ] Use variables as input for ML model.
+⬜️ Process the ISIMIP NetCDF files to extract the environmental variables. 
+
+⬜️ Use variables as input for ML model.
       
 ***
 
