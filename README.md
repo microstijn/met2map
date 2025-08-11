@@ -1,10 +1,15 @@
 # Project: met2map 
 
-TARA Oceans and ISIMIP Integration
+Met2Map is a computational framework designed to predict the metabolic capacity of marine microbial communities and forecast how this capacity might change under future climate scenarios. By integrating genome-scale metabolic models (GEMs) with machine learning and climate projection data, this project aims to understand the functional potential of the ocean's microbiome and its impact on key biogeochemical cycles and water quality.
 
-This repository contains the code and resources for a proof-of-principle project to combine marine metagenomic data from the TARA Oceans expedition with environmental model outputs from the Inter-Sectoral Impact Model Intercomparison Project (ISIMIP).
+The workflow uses real-world metagenomic and environmental data from the TARA Oceans project as a baseline to train a predictive model. It then leverages climate model outputs from the Inter-Sectoral Impact Model Intercomparison Project (ISIMIP) to project these metabolic functions into the past and future.
 
-The primary goal is to demonstrate a workflow for integrating these two distinct datasets to investigate potential relationships between marine microbial communities and large-scale climate variables.
+## Aims
+* Quantify metabolic potential: To use the metage2metabo toolkit to translate community-level genome-scale models (GEMs) from TARA Oceans samples into a quantifiable Water Quality Capacity (WQC) score. This score represents the community's potential to perform metabolic functions that influence water quality (e.g., nutrient cycling, pollutant degradation).
+
+* Develop a predictive model: To train a machine learning model that learns the relationship between environmental conditions (temperature, salinity, nutrients, oxygen) and the community's WQC score. This creates a powerful tool to predict metabolic capacity directly from environmental data.
+
+* Forecast biogeochemical change: To apply the trained model to historical and future climate projection data from ISIMIP. The goal is to generate global maps of predicted WQC, allowing us to visualize and analyze how the functional capacity of marine ecosystems might shift in response to climate change under different socioeconomic pathways (SSPs).
 
 ***
 
@@ -40,9 +45,6 @@ graph TD
 
 * [x] Initialize Git repository and create an initial commit.
 * [x] Write a preliminary `README.md` outlining the project's goal and methodology.
-* [x] Create a `LICENSE` file.
-* [x] Define a clear folder structure for code, data, and outputs.
-* [x] Set up a virtual environment or `Project.toml` file for Julia dependencies.
 * [x] Write generic helper functions for downloading data.
 * [x] install software (metage2metabo).
 
