@@ -6,12 +6,6 @@ This repository contains the code and resources for a proof-of-principle project
 
 The primary goal is to demonstrate a workflow for integrating these two distinct datasets to investigate potential relationships between marine microbial communities and large-scale climate variables.
 
-## Project Goals
-
-* **Integrate Data:** Combine location-specific TARA Oceans data with corresponding ISIMIP model outputs.
-* **Analyze Correlations:** Explore statistical relationships between microbial community composition and environmental parameters from the models.
-* **Proof-of-Principle:** Develop a repeatable, well-documented workflow that can be scaled for further research.
-
 ***
 
 ## Project Checklist
