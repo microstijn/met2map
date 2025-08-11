@@ -18,41 +18,76 @@ The primary goal is to demonstrate a workflow for integrating these two distinct
 
 The following is a checklist of tasks to complete this project.
 
-### **Phase 1: Repository Setup & Planning**
+```mermaid
+graph TD
+    subgraph Phase 1: Ground Truth Generation
+        A[TARA GEMs] --> B(Metage2Metabo - metacom);
+        C[TARA In-situ Env Data] -- Seeds/Features X --> B;
+        D[Define WQ Targets] --> B;
+        B --> E(WQC Score - Ground Truth y);
+    end
+
+    subgraph Phase 2: ML Training
+        C --> F(ML Model Training);
+        E --> F;
+        F --> G(Trained ML Model);
+    end
+
+    subgraph Phase 3: Prediction
+        H{ISIMIP Data Acquisition - NetCDF} --> I(Data Processing: NetCDF Grid Extraction);
+        I -- Future/Past Env Features X_proj --> G;
+        G --> J(Predicted WQC - Global Grid);
+    end
+
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+```
+
+### **Phase -1: Repository Setup & Planning**
 
 * [x] Initialize Git repository and create an initial commit.
 * [x] Write a preliminary `README.md` outlining the project's goal and methodology.
 * [x] Create a `LICENSE` file.
 * [x] Define a clear folder structure for code, data, and outputs.
 * [x] Set up a virtual environment or `Project.toml` file for Julia dependencies.
+* [x] Write generic helper functions for downloading data.
+* [x] install software (metage2metabo).
 
-### **Phase 2: Data Acquisition & Processing**
-**generic helper functions**
-
-* [x] Write generic helper functions for downloading data. 
-
+### **Phase 0: Data aquisition**
 **TARA Oceans Data**
 
-* [ ] Identify which Tara Oceans datasets are required.
-* [ ] Locate and list all direct download URLs for required data.
-* [ ] Develop a script to process and clean the raw Tara data.
+* [x] Identify which Tara Oceans datasets are required.
+* [x] Locate and list all direct download URLs for required data.
 
 **ISIMIP Model Data**
 
 * [ ] Identify the most relevant ISIMIP model outputs and inputs.
 * [ ] Download the selected ISIMIP climate model outputs.
-* [ ] Develop a Julia script map both datasets on a common raster. 
+* [ ] Develop a Julia script map both datasets on a common raster.
 
-### **Phase 3: Integration & Analysis**
+**GEMs**
+* [x] Download or create GEMs from TARA data.
 
-* [ ] Create script to load and merge the processed data.
-* [ ] Develop ML methodology to predict the datasets.
-* [ ] Develop proper statistics.
-* [ ] Create visualizations to illustrate the proof of principle.
+### Phase 1: Functional profiling 
 
+* [ ] Identify metabolites related to water quality (e.g., N2O production, methane oxidation, pollutant degradation) as targets.
+* [ ] Figure out how to use the in-situ TARA environmental measurements as seeds (available nutrients) for the simulation.
+* [ ] Run m2m metacom.
+* [ ] Quantify water quality contribution. 
+
+### Phase 2: Machine Learning (Linking Function to Environment)
+
+* [ ] Data prepration
+* [ ] Model testing and choosing the right aproach. 
+* [ ] Model training
+      
+### Phase 3: Machine Learning (Linking Function to Environment)
+
+* [ ] Process the ISIMIP NetCDF files to extract the environmental variables. 
+* [ ] Use variables as input for ML model.
+      
 ***
 
-### **Project Data Acquisition**
+### Project Data Acquisition
 
 This document outlines the procedures for downloading the project's metadata, raw metagenomic sequence data, and gene catalogs from the TARA Ocean project.
 
