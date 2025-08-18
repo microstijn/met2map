@@ -1,16 +1,15 @@
 # Project: met2map 
 
-TARA Oceans and ISIMIP Integration
+Met2Map is a computational framework designed to predict the metabolic capacity of marine microbial communities and forecast how this capacity might change under future climate scenarios. By integrating genome-scale metabolic models (GEMs) with machine learning and climate projection data, this project aims to understand the functional potential of the ocean's microbiome and its impact on key biogeochemical cycles and water quality.
 
-This repository contains the code and resources for a proof-of-principle project to combine marine metagenomic data from the TARA Oceans expedition with environmental model outputs from the Inter-Sectoral Impact Model Intercomparison Project (ISIMIP).
+The workflow uses real-world metagenomic and environmental data from the TARA Oceans project as a baseline to train a predictive model. It then leverages climate model outputs from the Inter-Sectoral Impact Model Intercomparison Project (ISIMIP) to project these metabolic functions into the past and future.
 
-The primary goal is to demonstrate a workflow for integrating these two distinct datasets to investigate potential relationships between marine microbial communities and large-scale climate variables.
+## Aims
+* Quantify metabolic potential: To use the metage2metabo toolkit to translate community-level genome-scale models (GEMs) from TARA Oceans samples into a quantifiable Water Quality Capacity (WQC) score. This score represents the community's potential to perform metabolic functions that influence water quality (e.g., nutrient cycling, pollutant degradation).
 
-## Project Goals
+* Develop a predictive model: To train a machine learning model that learns the relationship between environmental conditions (temperature, salinity, nutrients, oxygen) and the community's WQC score. This creates a powerful tool to predict metabolic capacity directly from environmental data.
 
-* **Integrate Data:** Combine location-specific TARA Oceans data with corresponding ISIMIP model outputs.
-* **Analyze Correlations:** Explore statistical relationships between microbial community composition and environmental parameters from the models.
-* **Proof-of-Principle:** Develop a repeatable, well-documented workflow that can be scaled for further research.
+* Forecast biogeochemical change: To apply the trained model to historical and future climate projection data from ISIMIP. The goal is to generate global maps of predicted WQC, allowing us to visualize and analyze how the functional capacity of marine ecosystems might shift in response to climate change under different socioeconomic pathways (SSPs).
 
 ***
 
@@ -18,41 +17,87 @@ The primary goal is to demonstrate a workflow for integrating these two distinct
 
 The following is a checklist of tasks to complete this project.
 
-### **Phase 1: Repository Setup & Planning**
+```mermaid
+graph TD
+    subgraph Phase 1: Ground Truth Generation
+        A[TARA GEMs] --> B(Metage2Metabo - metacom);
+        C[TARA In-situ Env Data] -- Seeds/Features X --> B;
+        D[Define WQ Targets] --> B;
+        B --> E(WQC Score - Ground Truth y);
+    end
 
-* [x] Initialize Git repository and create an initial commit.
-* [x] Write a preliminary `README.md` outlining the project's goal and methodology.
-* [x] Create a `LICENSE` file.
-* [x] Define a clear folder structure for code, data, and outputs.
-* [x] Set up a virtual environment or `Project.toml` file for Julia dependencies.
+    subgraph Phase 2: ML Training
+        C --> F(ML Model Training);
+        E --> F;
+        F --> G(Trained ML Model);
+    end
 
-### **Phase 2: Data Acquisition & Processing**
-**generic helper functions**
+    subgraph Phase 3: Prediction
+        H{ISIMIP Data Acquisition - NetCDF} --> I(Data Processing: NetCDF Grid Extraction);
+        I -- Future/Past Env Features X_proj --> G;
+        G --> J(Predicted WQC - Global Grid);
+    end
 
-* [x] Write generic helper functions for downloading data. 
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+```
 
+### **Phase -1: Repository Setup & Planning**
+
+ ✅ Initialize Git repository and create an initial commit.
+ 
+ ✅ Write a preliminary `README.md` outlining the project's goal and methodology.
+ 
+ ✅ Write generic helper functions for downloading data.
+ 
+ ✅ install software (metage2metabo).
+
+### **Phase 0: Data aquisition**
 **TARA Oceans Data**
 
-* [ ] Identify which Tara Oceans datasets are required.
-* [ ] Locate and list all direct download URLs for required data.
-* [ ] Develop a script to process and clean the raw Tara data.
+✅ Identify which Tara Oceans datasets are required.
+
+✅ Locate and list all direct download URLs for required data.
 
 **ISIMIP Model Data**
 
-* [ ] Identify the most relevant ISIMIP model outputs and inputs.
-* [ ] Download the selected ISIMIP climate model outputs.
-* [ ] Develop a Julia script map both datasets on a common raster. 
+⬜️ Identify the most relevant ISIMIP model outputs and inputs.
 
-### **Phase 3: Integration & Analysis**
+⬜️ Download the selected ISIMIP climate model outputs.
 
-* [ ] Create script to load and merge the processed data.
-* [ ] Develop ML methodology to predict the datasets.
-* [ ] Develop proper statistics.
-* [ ] Create visualizations to illustrate the proof of principle.
+⬜️ Develop a Julia script map both datasets on a common raster.
 
+**GEMs**
+
+✅ Download or create GEMs from TARA data.
+
+### Phase 1: Functional profiling 
+
+⬜️ Identify metabolites related to water quality (e.g., N2O production, methane oxidation, pollutant degradation) as targets.
+
+⬜️ Figure out how to use the in-situ TARA environmental measurements as seeds (available nutrients) for the simulation.
+
+⬜️ Run m2m metacom.
+
+⬜️ Quantify water quality contribution. 
+
+
+### Phase 2: Machine Learning (Linking Function to Environment)
+
+⬜️ Data prepration
+
+⬜️ Model testing and choosing the right aproach. 
+
+⬜️ Model training
+      
+### Phase 3: Machine Learning (Linking Function to Environment)
+
+⬜️ Process the ISIMIP NetCDF files to extract the environmental variables. 
+
+⬜️ Use variables as input for ML model.
+      
 ***
 
-### **Project Data Acquisition**
+### Project Data Acquisition
 
 This document outlines the procedures for downloading the project's metadata, raw metagenomic sequence data, and gene catalogs from the TARA Ocean project.
 
