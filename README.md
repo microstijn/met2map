@@ -153,6 +153,22 @@ The TARA Oceans prokaryotic gene catalogs (GEMS) were downloaded from Zenodo to 
     zenodo-get 10.5281/zenodo.5597227 -o data/gems/
     zenodo-get 10.5281/zenodo.5599412 -o data/gems/
     ```
+    
+#### **4. ISIMIP data aquisition**
+Historical and future climate projection data were downloaded from the ISIMIP repository. To handle the large volume of data and ensure reproducibility, we developed a Julia wrapper for the official isimip-client Python library.
+
+This client was used to search for and download all files matching the following criteria:
+
+| Parameter | Value |
+|:---:|:---:|
+| Simulation Round | ISIMIP3b |
+| Data Product | InputData and OutputData |
+| Time Step | monthly |
+| Region | global |
+| Resolution | 60arcmin |
+| Climate Models | gfdl-esm4, ukesm1-0-ll, mpi-esm1-2-hr |
+| Scenarios | piControl, historical, ssp126, ssp370, ssp585 |
+| Ocean Variables | thetao, so, o2, ph, no3, po4, si, fe |
 
 ## Getting Started
 
