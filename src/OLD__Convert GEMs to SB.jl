@@ -8,7 +8,7 @@
 
 # --- Module Definition ---
 # Wrapping the function in a module makes it a reusable package component.
-module GEMProcessor
+#module GEMProcessor
 
 using COBRA
 
