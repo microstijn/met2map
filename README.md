@@ -60,9 +60,9 @@ graph TD
 
 **ISIMIP Model Data**
 
-⬜️ Identify the most relevant ISIMIP model outputs and inputs.
+✅ Identify the most relevant ISIMIP model outputs and inputs.
 
-⬜️ Download the selected ISIMIP climate model outputs.
+✅ Download the selected ISIMIP climate model outputs.
 
 ⬜️ Develop a Julia script map both datasets on a common raster.
 
@@ -99,7 +99,7 @@ graph TD
 
 ### Project Data Acquisition
 
-This document outlines the procedures for downloading the project's metadata, raw metagenomic sequence data, and gene catalogs from the TARA Ocean project.
+This document outlines the procedures for downloading the project's metadata, raw metagenomic sequence data, and gene catalogs from the TARA Ocean project. The scripts if they exist are located in the `/data_aquisition/` folder, and have their own project .toml to prevent dependency pollution in the main project.  
 
 ---
 
