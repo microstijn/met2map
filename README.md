@@ -60,9 +60,9 @@ graph TD
 
 **ISIMIP Model Data**
 
-⬜️ Identify the most relevant ISIMIP model outputs and inputs.
+✅ Identify the most relevant ISIMIP model outputs and inputs.
 
-⬜️ Download the selected ISIMIP climate model outputs.
+✅ Download the selected ISIMIP climate model outputs.
 
 ⬜️ Develop a Julia script map both datasets on a common raster.
 
@@ -99,7 +99,7 @@ graph TD
 
 ### Project Data Acquisition
 
-This document outlines the procedures for downloading the project's metadata, raw metagenomic sequence data, and gene catalogs from the TARA Ocean project.
+This document outlines the procedures for downloading the project's metadata, raw metagenomic sequence data, and gene catalogs from the TARA Ocean project. The scripts if they exist are located in the `/data_aquisition/` folder, and have their own project .toml to prevent dependency pollution in the main project.  
 
 ---
 
@@ -153,6 +153,27 @@ The TARA Oceans prokaryotic gene catalogs (GEMS) were downloaded from Zenodo to 
     zenodo-get 10.5281/zenodo.5597227 -o data/gems/
     zenodo-get 10.5281/zenodo.5599412 -o data/gems/
     ```
+Now we need to ensure adherence to the `.sbml` filetype. This is why we wrote a small function (`convert_xml_to_sbml`) that processes a list of .xml models derived from metaGEM (e.g., TARA Oceans models) and converts them to standardized .sbml files in an output directory. The process can be multi-threaded to significantly speed up the conversion of many files. 
+
+```julia
+    using met2map
+    using Logging # I found the input files are not entirely SMBL compliant. print MANY warnings if not suppressed. 
+    using .Threads
+
+    # ensure smbl structure of GEMs
+    indir = "some/dir/"
+    outdir = "other/dir/"
+
+    global_logger(NullLogger())
+
+    Threads.@threads for file in readdir(indir, join=true)
+        convert_xml_to_sbml(file, outdir) 
+    end
+```
+
+
+
+
     
 #### **4. ISIMIP data aquisition**
 Historical and future climate projection data were downloaded from the ISIMIP repository. To handle the large volume of data and ensure reproducibility, we developed a Julia wrapper for the official isimip-client Python library.
