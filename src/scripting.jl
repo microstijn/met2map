@@ -7,9 +7,7 @@ Pkg.activate(joinpath(@__DIR__, ".."))
 using Revise
 using met2map
 
-
-
-using .GEMProcessor
+using GEMProcessor
 
 
 

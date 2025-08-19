@@ -1,5 +1,4 @@
 module met2map
-    include("GEMs_to_SB.jl")
+    include("GEMProcessor.jl")
 end # module met2map
-
 
