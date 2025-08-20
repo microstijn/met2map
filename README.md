@@ -72,11 +72,11 @@ graph TD
 
 ### Phase 1: Functional profiling 
 
-⬜️ Identify metabolites related to water quality (e.g., N2O production, methane oxidation, pollutant degradation) as targets.
+✅ Identify metabolites related to water quality (e.g., N2O production, methane oxidation, pollutant degradation) as targets.
 
 ⬜️ Figure out how to use the in-situ TARA environmental measurements as seeds (available nutrients) for the simulation.
 
-⬜️ Run m2m metacom.
+✅ Run m2m metacom.
 
 ⬜️ Quantify water quality contribution. 
 
@@ -191,21 +191,87 @@ This client was used to search for and download all files matching the following
 | Scenarios | piControl, historical, ssp126, ssp370, ssp585 |
 | Ocean Variables | thetao, so, o2, ph, no3, po4, si, fe |
 
-## Getting Started
+---
 
-To get a local copy up and running, follow these simple steps.
+## Running m2m metacom
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
-    ```
+**Goals**
+Build a Julia wrapper for metage2metabo, and build the tooling that allows for quick building and executing of various experiments. Currently generates lists of metabolites, seeds and runs metacom. 
 
-2.  **Install dependencies:**
-    (Instructions will be added here once a dependency manager like `Project.toml` is set up.)
+**Prerequisites**
+* **m2m Docker Image:** You must have successfully built the m2m Docker image and tagged it as m2m. (as desribed in the metage2metabo readme).
 
-3.  **Run the analysis:**
-    (Instructions for running the main script will be added here.)
+### Setting up seeds (and targets)
+Using `generate_metabolite_list` and `create_seed_file` from the met2map project.
+
+```julia
+project_dir = "D:/met2map"
+metabolites_files = ["seeds/seeds.txt", "targets/targets.txt"]
+output_dir = dirname.(metabolites_files)
+
+# generate some seed base files
+target_metabolites = [
+    "M_bspa_e"     # Bisphenol A from Polycarbonate
+]
+
+seawater_seed_metabolites = [
+    # Core Components
+    "M_h2o_e", "M_h_e", "M_o2_e", "M_co2_e",
+    # Major Nutrients
+    "M_no3_e", "M_nh4_e", "M_pi_e", "M_so4_e",
+    # Major Ions (Salts)
+    "M_na1_e", "M_cl_e", "M_mg2_e", "M_ca2_e", "M_k_e",
+    # Essential Trace Metals
+    "M_fe3_e", "M_fe2_e", "M_zn2_e", "M_mn2_e", "M_cu2_e", "M_cobalt2_e",
+    # Internal Currency Metabolites
+    "M_atp_c", "M_adp_c", "M_amp_c", "M_nad_c", "M_nadh_c",
+    "M_nadp_c", "M_nadph_c", "M_coa_c", "M_ppi_c"
+]
+
+seed_target = [target_metabolites, seawater_seed_metabolites]
+
+for (output, metabolite) in zip(normpath.(joinpath.(project_dir, metabolites_files)), seed_target)
+    generate_metabolite_list(
+        metabolite,
+        output
+    )
+end
+
+for (met, out) in zip(metabolites_files, output_dir)
+    create_seed_file(
+        project_dir,
+        String(met),
+        out
+    )
+end
+```
+## Running metacom
+Using running `metage2metabo` using the `execute_metacom` from the met2map project.
+
+```julia
+# run metacom
+project_dir = "D:/met2map"
+sample_dirs = readdir("D:/met2map/metage2metabo_TARA/p1/GEMs_smbl/", join = true)
+sample_dirs = replace.(sample_dirs, project_dir => "")
+results_dir = "metage2metabo_TARA/p1/metacom_results"
+seeds_file = "seeds/seeds.sbml"
+targets_file = "targets/seeds.sbml"
+
+s = joinpath(project_dir, sample_dirs[1])
+
+for sample in sample_dirs
+    execute_metacom(
+        project_dir,
+        sample,
+        results_dir,
+        seeds_file,
+        targets_file;
+        m2m_threads=7 
+    )
+end
+```
+
+---
 
 ***
 
