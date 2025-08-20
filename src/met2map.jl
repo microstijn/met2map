@@ -5,5 +5,10 @@ module met2map
     include("FileSorter.jl")
     using .FileSorter
     export sort_sbml_files
+    include("MetacomRunner.jl")
+    using .MetacomRunner
+    export execute_metacom
+    export create_seed_file
+    export generate_metabolite_list
 end # module met2map
 
