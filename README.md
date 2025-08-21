@@ -18,27 +18,71 @@ The workflow uses real-world metagenomic and environmental data from the TARA Oc
 The following is a checklist of tasks to complete this project.
 
 ```mermaid
+---
+config:
+    theme: jekyll-theme-chirpy
+---
 graph TD
-    subgraph Phase 1: Ground Truth Generation
-        A[TARA GEMs] --> B(Metage2Metabo - metacom);
-        C[TARA In-situ Env Data] -- Seeds/Features X --> B;
-        D[Define WQ Targets] --> B;
-        B --> E(WQC Score - Ground Truth y);
+    %% Phase 1a: Topological Analysis
+    subgraph "Phase 1a: Topological Analysis (metage2metabo)"
+        A["Raw TARA GEMs (.xml)"] --> A1["met2map: convert_xml_to_sbml"]
+        A1 --> A2["Standardized GEMs (.sbml)"]
+
+        C{"Define Seawater Seed Metabolites"} --> C1["met2map: generate_metabolite_list"]
+        C1 --> C2["seeds.txt"]
+        C2 --> C3["met2map: create_seed_file"]
+        C3 --> C4["Seed.sbml"]
+
+        D{"Define Water Quality Target Metabolites"} --> D1["met2map: generate_metabolite_list"]
+        D1 --> D2["targets.txt"]
+        D2 --> D3["met2map: create_seed_file"]
+        D3 --> D4["Targets.sbml"]
+
+        A2 -- "Community Models" --> B["met2map: execute_metacom"]
+        C4 -- "Environment" --> B
+        D4 -- "Metabolic Goals" --> B
+
+        B --> B1["Metacom Results (.json, rev_cscope.tsv)"]
+        B1 --> E["Analyze Production Capacity"]
+        E --> F["Topological WQC Score (Ground Truth y1)"]
     end
 
-    subgraph Phase 2: ML Training
-        C --> F(ML Model Training);
-        E --> F;
-        F --> G(Trained ML Model);
+    %% Phase 1b: Quantitative Flux Analysis
+    subgraph "Phase 1b: Quantitative Flux Analysis (COBREXA.jl)"
+        G["TARA In-situ Env Data"] -- "Nutrient Concentrations" --> B2["Set FBA Uptake Bounds"]
+        A2 --> B2
+        B2 --> B3["COBREXA.jl: Flux Balance Analysis (FBA)"]
+        B3 --> F2["Flux-based WQC Score (Ground Truth y2)"]
     end
 
-    subgraph Phase 3: Prediction
-        H{ISIMIP Data Acquisition - NetCDF} --> I(Data Processing: NetCDF Grid Extraction);
-        I -- Future/Past Env Features X_proj --> G;
-        G --> J(Predicted WQC - Global Grid);
+    %% Phase 2: ML Training
+    subgraph "Phase 2: ML Model Training"
+        G -- "Features X" --> H["Train Predictive Model"]
+        F --> H
+        F2 --> H
+        H --> I["Trained ML Model"]
     end
 
-    style H fill:#f9f,stroke:#333,stroke-width:2px
+    %% Phase 3a: Static Prediction
+    subgraph "Phase 3a: Static Prediction (Snapshot)"
+        J{"ISIMIP Climate Data"} --> K["Process & Extract Present-Day Features"]
+        K --> I
+        I --> L["Predicted WQC (Snapshot)"]
+    end
+
+    %% Phase 3b: Dynamic Prediction
+    subgraph "Phase 3b: Dynamic Prediction (Historically-Informed)"
+        J --> M["Process & Engineer Historical Features"]
+        M -- "Historical Features" --> N["Train Secondary / Temporally-Aware Model"]
+        K -- "Present-Day Features" --> N
+        F --> N
+        F2 --> N
+        N --> O["Trained Historical Model"]
+        O --> P["Predicted WQC (Historically-Informed)"]
+    end
+
+
+
 ```
 
 ### **Phase -1: Repository Setup & Planning**
