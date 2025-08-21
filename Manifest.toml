@@ -2,7 +2,7 @@
 
 julia_version = "1.10.3"
 manifest_format = "2.0"
-project_hash = "6ecc769ba449607cecd1e322c2bcf77b19f6a71b"
+project_hash = "5fd9937848ef16bf7517beb1d319157f531c77f1"
 
 [[deps.AbstractFBCModels]]
 deps = ["DocStringExtensions", "Downloads", "InteractiveUtils", "SHA", "Serialization", "SparseArrays", "Test"]

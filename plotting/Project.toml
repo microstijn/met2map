@@ -1,0 +1,11 @@
+name = "plotting"
+uuid = "28003897-6ba2-4cfb-b814-5fbc1837d70c"
+authors = ["Stijn Peeters <58211004+microstijn@users.noreply.github.com>"]
+version = "0.1.0"
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
