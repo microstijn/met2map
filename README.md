@@ -18,8 +18,13 @@ The workflow uses real-world metagenomic and environmental data from the TARA Oc
 The following is a checklist of tasks to complete this project.
 
 ```mermaid
+---
+config:
+    theme: jekyll-theme-chirpy
+---
 graph TD
-    subgraph "Phase 1: Ground Truth Generation & WQC Calculation"
+    %% Phase 1a: Topological Analysis
+    subgraph "Phase 1a: Topological Analysis (metage2metabo)"
         A["Raw TARA GEMs (.xml)"] --> A1["met2map: convert_xml_to_sbml"]
         A1 --> A2["Standardized GEMs (.sbml)"]
 
@@ -39,29 +44,44 @@ graph TD
 
         B --> B1["Metacom Results (.json, rev_cscope.tsv)"]
         B1 --> E["Analyze Production Capacity"]
-        E --> F["WQC Score (Ground Truth y)"]
+        E --> F["Topological WQC Score (Ground Truth y1)"]
     end
 
+    %% Phase 1b: Quantitative Flux Analysis
+    subgraph "Phase 1b: Quantitative Flux Analysis (COBREXA.jl)"
+        G["TARA In-situ Env Data"] -- "Nutrient Concentrations" --> B2["Set FBA Uptake Bounds"]
+        A2 --> B2
+        B2 --> B3["COBREXA.jl: Flux Balance Analysis (FBA)"]
+        B3 --> F2["Flux-based WQC Score (Ground Truth y2)"]
+    end
+
+    %% Phase 2: ML Training
     subgraph "Phase 2: ML Model Training"
-        G["TARA In-situ Env Data"] --> H["Train Predictive Model"]
+        G -- "Features X" --> H["Train Predictive Model"]
         F --> H
+        F2 --> H
         H --> I["Trained ML Model"]
     end
 
+    %% Phase 3a: Static Prediction
     subgraph "Phase 3a: Static Prediction (Snapshot)"
         J{"ISIMIP Climate Data"} --> K["Process & Extract Present-Day Features"]
         K --> I
         I --> L["Predicted WQC (Snapshot)"]
     end
 
+    %% Phase 3b: Dynamic Prediction
     subgraph "Phase 3b: Dynamic Prediction (Historically-Informed)"
         J --> M["Process & Engineer Historical Features"]
         M -- "Historical Features" --> N["Train Secondary / Temporally-Aware Model"]
         K -- "Present-Day Features" --> N
-        F -- "Ground Truth y" --> N
+        F --> N
+        F2 --> N
         N --> O["Trained Historical Model"]
         O --> P["Predicted WQC (Historically-Informed)"]
     end
+
+
 
 ```
 
