@@ -85,6 +85,44 @@ graph TD
 
 ```
 
+More condensed
+
+```mermaid
+graph TD
+    %% Inputs
+    A["Genomic Models"]
+    B["In-situ Environmental Data"]
+    C["Climate Projection Data"]
+
+    %% Phase 1: Ground Truth Generation
+    subgraph "Phase 1: Ground Truth Generation"
+        D["Topological Analysis"]
+        E["Flux Balance Analysis (FBA)"]
+        A --> D & E
+        B --> D & E
+        D --> F["Topological WQC Score (y1)"]
+        E --> G["Flux-based WQC Score (y2)"]
+    end
+
+    %% Phase 2: ML Training
+    subgraph "Phase 2: ML Training"
+        H["Train Predictive Model"]
+        F & G -- "Ground Truth Labels" --> H
+        B -- "Features" --> H
+        H --> I["<b>Trained ML Model</b>"]
+    end
+
+    %% Phase 3: Prediction
+    subgraph "Phase 3: Prediction"
+        I -- "Static Prediction" --> J["Predicted WQC (Snapshot)"]
+        C -- "Present-Day Features" --> J
+
+        I -- "Base Model" --> K["Train Temporal Model"]
+        C -- "Historical Features" --> K
+        K -- "Dynamic Prediction" --> L["Predicted WQC (Historically-Informed)"]
+    end
+```
+
 ### **Phase -1: Repository Setup & Planning**
 
  ✅ Initialize Git repository and create an initial commit.
