@@ -10,5 +10,6 @@ module met2map
     export execute_metacom
     export create_seed_file
     export generate_metabolite_list
+    export aggregate_metabolite_production
 end # module met2map
 

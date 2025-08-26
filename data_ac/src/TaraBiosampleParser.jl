@@ -7,6 +7,7 @@ using CSV
 using JSON
 using DataConvenience
 export parse_tara_metadata
+export coalesce_case_insensitive_cols
 
 """
     parse_tara_metadata(filepath::String)
@@ -112,5 +113,34 @@ function parse_tara_metadata(filepath::String)
     cleannames!(df)
     return df
 end
+
+function coalesce_case_insensitive_cols(df::DataFrame)
+    # 1. Group column names by their lowercase version
+    col_groups = Dict{String, Vector{Symbol}}()
+    for col_name in names(df)
+        lowercase_name = lowercase(col_name)
+        
+        if !haskey(col_groups, lowercase_name)
+            col_groups[lowercase_name] = Symbol[]
+        end
+        push!(col_groups[lowercase_name], Symbol(col_name))
+    end
+
+    # 2. Build a list of transformations
+    transformations = []
+    for (new_name, old_names) in col_groups
+        if length(old_names) == 1
+            # Rule for single columns: just rename to lowercase
+            push!(transformations, old_names[1] => new_name)
+        else
+            # Rule for multiple columns: coalesce row-by-row
+            push!(transformations, old_names => ByRow(coalesce) => new_name)
+        end
+    end
+
+    # 3. Apply transformations and return the new DataFrame
+    return select(df, transformations...)
+end
+
 
 end # end module

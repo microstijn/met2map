@@ -2,6 +2,7 @@
 using Pkg
 #Pkg.develop(path=joinpath(@__DIR__, ".."))
 Pkg.activate(joinpath(@__DIR__, ".."))
+
 using Revise
 using met2map
 using Logging
@@ -9,7 +10,7 @@ using .Threads
 using JSON
 using CSV
 using DataFrames
-
+using FilePathsBaseB
 # ensure smbl structure of GEMs
 
 indir = "D:/met2map/metage2metabo_TARA/p1/GEMs/"
@@ -76,15 +77,14 @@ end
 
 # run metacom
 project_dir = "D:/met2map"
-sample_dirs = readdir("D:/met2map/metage2metabo_TARA/p1/GEMs_smbl/", join = true)
-sample_dirs = replace.(sample_dirs, project_dir => "")
+full_sample_dirs = readdir("D:/met2map/metage2metabo_TARA/p1/GEMs_smbl/", join = true)
+relative_sample_dirs = [relpath(d, project_dir) for d in full_sample_dirs]
 results_dir = "metage2metabo_TARA/p1/metacom_results"
 seeds_file = "seeds/seeds.sbml"
 targets_file = "targets/seeds.sbml"
 
-s = joinpath(project_dir, sample_dirs[1])
 
-for sample in sample_dirs[1:20]
+for sample in relative_sample_dirs
     execute_metacom(
         project_dir,
         sample,
@@ -109,82 +109,6 @@ p = normpath(p)
 
 data = JSON.parsefile(p)
 
-keys(data)
-
-function aggregate_metabolite_production(root_dir::String)
-    # Find all 'rev_cscope.tsv' files recursively
-    all_tsv_files = []
-    for (current_path, dirs, files) in walkdir(root_dir)
-        for file in files
-            if file == "rev_cscope.tsv"
-                push!(all_tsv_files, joinpath(current_path, file))
-            end
-        end
-    end
-
-    if isempty(all_tsv_files)
-        @warn "No 'rev_cscope.tsv' files found in the directory: $root_dir"
-        return DataFrame()
-    end
-
-    println("Found $(length(all_tsv_files)) files to process.")
-
-    # 2. Process each file and store its summary DataFrame in a list
-    all_sample_dfs = DataFrame[]
-    for filepath in all_tsv_files
-        try
-            # The sample ID is the name of the folder TWO levels up
-            sample_id = basename(dirname(dirname(filepath)))
-            println("Processing sample: $sample_id")
-
-            # Read the TSV file
-            df = CSV.read(filepath, DataFrame)
-
-            # The first column contains bin names, the rest are metabolites
-            metabolite_cols = names(df)[2:end]
-            
-            # Calculate the sum for each metabolite column
-            production_counts = [sum(df[!, col]) for col in metabolite_cols]
-
-            # **FIX 2**: Create the DataFrame using the correct Pair syntax
-            sample_df = DataFrame(
-                :Metabolite => metabolite_cols,
-                Symbol(sample_id) => production_counts
-            )
-            push!(all_sample_dfs, sample_df)
-
-        catch e
-            @error "Could not process file: $filepath"
-            @error "  Error: " e
-        end
-    end
-
-    # 3. Merge all individual sample DataFrames into one large DataFrame
-    if isempty(all_sample_dfs)
-        return DataFrame()
-    end
-
-    # Start with the first DataFrame
-    merged_df = first(all_sample_dfs)
-
-    # Iteratively join the rest of the DataFrames
-    for i in 2:length(all_sample_dfs)
-        merged_df = outerjoin(merged_df, all_sample_dfs[i], on = :Metabolite)
-    end
-
-    # 4. Clean up the final DataFrame
-    # Replace any 'missing' values with 0, as this means the metabolite
-    # was not present in that sample's file (i.e., 0 producers).
-    for col in names(merged_df)
-        if eltype(merged_df[!, col]) >: Missing
-            merged_df[!, col] = coalesce.(merged_df[!, col], 0)
-        end
-    end
-    
-    println("\nProcessing complete!")
-    return merged_df
-end
-
 results_directory = "D:/met2map/metage2metabo_TARA/p1/metacom_results"
 
 # Run the analysis
@@ -193,4 +117,10 @@ final_summary_df = aggregate_metabolite_production(results_directory)
 sort!(
     final_summary_df, :Metabolite
 )
+
+p = joinpath(results_directory, "metacom_analysis")
+mkpath(joinpath(results_directory, "metacom_analysis"))
+
+CSV.write(joinpath(p, "aggregate_metabolite_production.tsv"), final_summary_df, delim = "\t")
+
 
