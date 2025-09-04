@@ -34,6 +34,11 @@ CSV.write(
 )
 
 #-----------------------------------------
-# Parsing JSON biosamples
+# getting WorldOceanAtlas data with
+# WorldOceanAtlasTools
 #-----------------------------------------
-
+year
+var_info
+var_short
+local_dir
+download_woa_data

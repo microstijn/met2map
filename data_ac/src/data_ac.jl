@@ -6,5 +6,8 @@ module data_ac
     using .TaraBiosampleParser
     export parse_tara_metadata 
     export coalesce_case_insensitive_cols
+    include("WOAData.jl")
+    using .WOAData
+    export download_woa_data
 end # module data_ac
 

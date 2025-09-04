@@ -10,7 +10,9 @@ using .Threads
 using JSON
 using CSV
 using DataFrames
-using FilePathsBaseB
+using FilePathsBase
+
+
 # ensure smbl structure of GEMs
 
 indir = "D:/met2map/metage2metabo_TARA/p1/GEMs/"
