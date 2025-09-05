@@ -35,10 +35,41 @@ CSV.write(
 
 #-----------------------------------------
 # getting WorldOceanAtlas data with
-# WorldOceanAtlasTools
 #-----------------------------------------
-year
-var_info
-var_short
-local_dir
-download_woa_data
+
+options = get_woa_options()
+output_dir = "D:/met2map/woa/"
+year = 2018
+variables = [i[1] for i in options.variables]
+resolution = 1
+climatology = [i[1] for i in options.climatologies]
+period = collect(1:12)
+
+
+fieldnames(WOAOptions)
+
+status = []
+
+for var in variables, clim in climatology, per in period
+    stat = download_woa_data(
+        output_dir  = output_dir,
+        year        = year,
+        v           = var,
+        gr          = resolution,
+        climatology = clim,
+        period      = per
+    );
+    push!(
+       status, stat 
+    )
+end
+
+options = get_woa_options()
+output_dir = "D:/met2map/woa/"
+year = 2018
+variables = [i[1] for i in options.variables]
+resolution = 1
+climatology = [i[1] for i in options.climatologies]
+period = collect(1:12)
+
+

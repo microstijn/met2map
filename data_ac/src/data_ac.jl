@@ -9,5 +9,8 @@ module data_ac
     include("WOAData.jl")
     using .WOAData
     export download_woa_data
+    export get_woa_options
+    export WOAOptions
+    export DownloadStatus
 end # module data_ac
 
