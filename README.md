@@ -258,7 +258,7 @@ Now we need to ensure adherence to the `.sbml` filetype. This is why we wrote a 
 
     
 #### **4. ISIMIP data aquisition**
-Historical and future climate projection data were downloaded from the ISIMIP repository. To handle the large volume of data and ensure reproducibility, we developed a Julia wrapper for the official isimip-client Python library.
+Historical and future climate projection data were downloaded from the ISIMIP repository. To handle the large volume of data and ensure reproducibility, we developed a Julia wrapper for the official isimip-client Python library, the module ISIMIPClientPy. 
 
 This client was used to search for and download all files matching the following criteria:
 
@@ -272,6 +272,80 @@ This client was used to search for and download all files matching the following
 | Climate Models | gfdl-esm4, ukesm1-0-ll, mpi-esm1-2-hr |
 | Scenarios | piControl, historical, ssp126, ssp370, ssp585 |
 | Ocean Variables | thetao, so, o2, ph, no3, po4, si, fe |
+
+
+#### **5. Acquiring World Ocean Atlas (WOA) data**
+
+The WOAData module provides an interface for downloading data directly from the NOAA servers for the World Ocean Atlas 2018 and 2023 releases. The main function is download_woa_data, which downloads a single data file.
+
+**Exploring Download Options**
+Before downloading, you can inspect all available parameters by calling get_woa_options():
+
+```julia
+using Met2Map.WOAData
+
+options = get_woa_options()
+
+println("Available Years: ", options.years)
+println("Available Variables: ", options.variables)
+println("Available Resolutions: ", options.resolutions)
+
+```
+
+**Example: Download a single file**
+
+The function takes several keyword arguments to specify the exact file you need. It returns a DownloadStatus object that tells you whether the download succeeded, failed, or was skipped.
+
+```julia
+using Met2Map.WOAData
+
+# Download the annual mean temperature for the 1955-1964 climatology (WOA23)
+status = download_woa_data(
+    output_dir = "./woa_data",
+    year = 2023,
+    v = "t",
+    gr = 1.00,
+    climatology = "5564",
+    period = "annual"
+)
+
+# You can check the result
+if status.status == :downloaded
+    println("Successfully downloaded: ", status.filepath)
+end
+```
+
+**Script example: Downloading all months**
+
+You can loop to download a series of files, such as all 12 months for a specific climatology. The function will automatically report the status of each attempt.
+
+```julia
+using Met2Map.WOAData
+
+output_dir = "./woa_data"
+results = []
+
+for month in 1:12
+    status = download_woa_data(
+        output_dir = output_dir,
+        year = 2018,
+        v = "s", # Salinity
+        gr = 0.25,
+        climatology = "decav",
+        period = month
+    )
+    push!(results, status)
+end
+
+# You can now inspect the results to see which files failed, if any.
+failed_downloads = filter(s -> s.status == :failed, results)
+if !isempty(failed_downloads)
+    println("The following downloads failed:")
+    for failure in failed_downloads
+        println("- ", failure.url)
+    end
+end
+```
 
 ---
 
