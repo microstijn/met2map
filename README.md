@@ -123,61 +123,46 @@ graph TD
     end
 ```
 
-### **Phase -1: Repository Setup & Planning**
-
- ✅ Initialize Git repository and create an initial commit.
- 
- ✅ Write a preliminary `README.md` outlining the project's goal and methodology.
- 
- ✅ Write generic helper functions for downloading data.
- 
- ✅ install software (metage2metabo).
-
-### **Phase 0: Data aquisition**
-**TARA Oceans Data**
-
-✅ Identify which Tara Oceans datasets are required.
-
-✅ Locate and list all direct download URLs for required data.
-
-**ISIMIP Model Data**
-
-✅ Identify the most relevant ISIMIP model outputs and inputs.
-
-✅ Download the selected ISIMIP climate model outputs.
-
-⬜️ Develop a Julia script map both datasets on a common raster.
-
-**GEMs**
-
-✅ Download or create GEMs from TARA data.
-
-### Phase 1: Functional profiling 
-
-✅ Identify metabolites related to water quality (e.g., N2O production, methane oxidation, pollutant degradation) as targets.
-
-⬜️ Figure out how to use the in-situ TARA environmental measurements as seeds (available nutrients) for the simulation.
-
-✅ Run m2m metacom.
-
-⬜️ Quantify water quality contribution. 
-
-
-### Phase 2: Machine Learning (Linking Function to Environment)
-
-⬜️ Data prepration
-
-⬜️ Model testing and choosing the right aproach. 
-
-⬜️ Model training
-      
-### Phase 3: Machine Learning (Linking Function to Environment)
-
-⬜️ Process the ISIMIP NetCDF files to extract the environmental variables. 
-
-⬜️ Use variables as input for ML model.
-      
-***
+```mermaid
+graph TD
+    subgraph "Phase 0: Data Acquisition (Complete)"
+        subgraph "For Seed Generation"
+            DA1(TaraBiosampleParser.jl: Parses TARA metadata)
+        end
+        subgraph "For ML Input"
+            DA2(WOAData.jl: Downloads World Ocean Atlas data)
+            DA3(ISIMIP_client_wrapper.jl: Downloads ISIMIP climate data)
+        end
+    end
+    subgraph "Phase 1: Implemented Processing & Analysis"
+        direction LR
+        A[1a: Topological Analysis<br>using metage2metabo]
+        B[1b: Quantitative Flux Analysis<br>using COBREXA.jl]
+        A1[GEMProcessor.jl: converts XML to SBML]
+        B1[FileSorter.jl: sorts SBML files]
+        B2[MetacomRunner.jl: performs analysis]
+    end
+    subgraph "Planned/Not Implemented"
+        C(2: ML Model Training)
+        D(3: Static Prediction)
+    end
+    DA1 -- for Seed Generation --> A
+    DA2 -- for ML Input --> C
+    DA3 -- for ML Input --> C
+    A -- Data Flow --> B
+    A1 -- Uses --> A
+    B1 -- Used by --> B
+    B2 -- Used by --> B
+    B -- Current stopping point --> C
+    style DA1 fill:#e0f7fa,stroke:#00bcd4,stroke-width:1px,color:#000
+    style DA2 fill:#e0f7fa,stroke:#00bcd4,stroke-width:1px,color:#000
+    style DA3 fill:#e0f7fa,stroke:#00bcd4,stroke-width:1px,color:#000
+    style A fill:#e0f7fa,stroke:#00bcd4,stroke-width:2px,color:#000
+    style B fill:#e0f7fa,stroke:#00bcd4,stroke-width:2px,color:#000
+    style A1 fill:#b2ebf2,stroke:#00bcd4,stroke-width:1px,color:#000
+    style B1 fill:#b2ebf2,stroke:#00bcd4,stroke-width:1px,color:#000
+    style B2 fill:#b2ebf2,stroke:#00bcd4,stroke-width:1px,color:#000
+```
 
 ### Project Data Acquisition
 
