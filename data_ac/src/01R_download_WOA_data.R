@@ -88,7 +88,7 @@ get_thredds <- function(domain, catalogue, destdir, code, overwrite = F) {
 # Define basic variables
 months <- str_pad(0:12, width = 2, pad = 0)
 domain <- "https://www.ncei.noaa.gov"
-destdir <- "/g/data/vf71/WOA_data/global"
+destdir <- "D:/met2map/woa/"
 
 start <- Sys.time()
 print(paste0("Started download at ", start))
@@ -98,6 +98,7 @@ catalogue <- paste0(
   domain, "/thredds-ocean/catalog/woa23/DATA/temperature/",
   "netcdf/decav81B0/0.25/catalog.xml"
 )
+
 get_thredds(domain, catalogue, file.path(destdir, "temperature"), months,
   overwrite = F
 )
