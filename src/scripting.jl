@@ -85,7 +85,6 @@ results_dir = "metage2metabo_TARA/p1/metacom_results"
 seeds_file = "seeds/seeds.sbml"
 targets_file = "targets/seeds.sbml"
 
-
 for sample in relative_sample_dirs
     execute_metacom(
         project_dir,
@@ -124,5 +123,4 @@ p = joinpath(results_directory, "metacom_analysis")
 mkpath(joinpath(results_directory, "metacom_analysis"))
 
 CSV.write(joinpath(p, "aggregate_metabolite_production.tsv"), final_summary_df, delim = "\t")
-
 
